@@ -52,6 +52,24 @@ mvn test -DsuiteXmlFile=src/test/resources/testng-api.xml -Dtest=PetApiTests
 Tests run methods in parallel (see the `testng*.xml` suites). Each UI test
 gets its own browser instance, so parallel runs don't step on each other.
 
+## Running without XML files
+
+If you'd rather not touch the suite XMLs, there's a runner that builds the
+suite at runtime. Anything new is picked up automatically as long as it sits
+in the right package with the right group:
+
+```bash
+mvn test-compile exec:java -Dexec.args="--suite=api"
+mvn test-compile exec:java -Dexec.args="--suite=ui --browser=firefox --headless=false --threads=2"
+mvn test-compile exec:java -Dexec.args="--suite=all --groups=smoke"
+```
+
+Flags: `--suite=all|api|ui`, `--groups=a,b`, `--parallel=methods`,
+`--threads=N`, `--browser=chrome|firefox`, `--headless=true|false`.
+Add `--dry-run` to only print the generated suite
+(`test-output/dynamic-testng.xml`) without running it. Every flag also works
+as `-Dsuite=api` etc., which is handy in CI.
+
 ## Reports
 
 After a run you'll find:
