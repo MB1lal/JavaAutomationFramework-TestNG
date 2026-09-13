@@ -54,6 +54,8 @@ jobs:
     needs: test
     if: always()
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Download Pages content
         uses: actions/download-artifact@v7
