@@ -1,6 +1,6 @@
 package com.automation.runner;
 
-import com.automation.listeners.TestListener;
+import com.automation.runner.SuiteGenerator.SuiteOptions;
 import org.testng.TestNG;
 import org.testng.xml.XmlSuite;
 
@@ -49,7 +49,7 @@ public final class TestRunner {
         System.setProperty("headless", value(flags, "headless", System.getProperty("headless", "true")));
 
         XmlSuite xmlSuite = SuiteGenerator.generate(
-                new SuiteGenerator.SuiteOptions(suite, groups, parallel, threads));
+                new SuiteOptions(suite, groups, parallel, threads));
 
         Files.createDirectories(out.getParent());
         Files.writeString(out, xmlSuite.toXml());
@@ -62,7 +62,6 @@ public final class TestRunner {
 
         TestNG testng = new TestNG();
         testng.setXmlSuites(List.of(xmlSuite));
-        testng.addListener(new TestListener());
         testng.run();
         System.exit(testng.getStatus());
     }

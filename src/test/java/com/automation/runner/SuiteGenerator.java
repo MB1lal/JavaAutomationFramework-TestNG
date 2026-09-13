@@ -19,7 +19,6 @@ public final class SuiteGenerator {
 
     public static final String API_PACKAGE = "com.automation.tests.api";
     public static final String UI_PACKAGE = "com.automation.tests.ui";
-    public static final String LISTENER = "com.automation.listeners.TestListener";
 
     private SuiteGenerator() {
     }
@@ -42,7 +41,6 @@ public final class SuiteGenerator {
         suite.setParallel(mode);
         suite.setThreadCount(options.threads());
         suite.setVerbose(2);
-        suite.addListener(LISTENER);
 
         switch (options.suite().toLowerCase()) {
             case "api" -> addTest(suite, "API tests", API_PACKAGE,

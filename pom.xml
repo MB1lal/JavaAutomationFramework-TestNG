@@ -31,8 +31,7 @@
         <surefire-plugin.version>3.5.2</surefire-plugin.version>
         <resources-plugin.version>3.3.1</resources-plugin.version>
         <exec-plugin.version>3.5.0</exec-plugin.version>
-        <!-- Suite + runtime knobs (overridable from the command line) -->
-        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+        <!-- Runtime knobs (overridable from the command line) -->
         <browser>chrome</browser>
         <headless>true</headless>
         <threadCount>4</threadCount>
@@ -59,9 +58,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire-plugin.version}</version>
                 <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
-                    </suiteXmlFiles>
+                    <parallel>methods</parallel>
+                    <threadCount>${threadCount}</threadCount>
                     <systemPropertyVariables>
                         <browser>${browser}</browser>
                         <headless>${headless}</headless>

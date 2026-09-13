@@ -1,5 +1,7 @@
 # Java Automation Framework (TestNG)
 
+[![Tests](https://github.com/MB1lal/JavaAutomationFramework-TestNG/actions/workflows/maven.yml/badge.svg)](https://github.com/MB1lal/JavaAutomationFramework-TestNG/actions)
+
 Browser + API tests for two public demo sites, written in plain TestNG.
 No Serenity, no Cucumber — just Selenium, RestAssured and TestNG, so the
 project stays small and easy to follow.
@@ -20,46 +22,19 @@ What gets tested:
 
 ## Running the tests
 
-Run everything:
+Run everything (methods run in parallel, 4 threads by default):
 
 ```bash
 mvn test
 ```
 
-Just the API tests (no browser needed):
-
-```bash
-mvn test -DsuiteXmlFile=src/test/resources/testng-api.xml
-```
-
-Just the UI tests:
-
-```bash
-mvn test -DsuiteXmlFile=src/test/resources/testng-ui.xml
-```
-
-Useful options:
-
-```bash
-# run headed, or on firefox
-mvn test -Dheadless=false
-mvn test -Dbrowser=firefox
-
-# run a single class
-mvn test -DsuiteXmlFile=src/test/resources/testng-api.xml -Dtest=PetApiTests
-```
-
-Tests run methods in parallel (see the `testng*.xml` suites). Each UI test
-gets its own browser instance, so parallel runs don't step on each other.
-
-## Running without XML files
-
-If you'd rather not touch the suite XMLs, there's a runner that builds the
-suite at runtime. Anything new is picked up automatically as long as it sits
-in the right package with the right group:
+For anything more specific there are no XML suites to edit — a runner builds
+the suite at runtime. New tests are picked up automatically as long as they
+sit in the right package with the right group:
 
 ```bash
 mvn test-compile exec:java -Dexec.args="--suite=api"
+mvn test-compile exec:java -Dexec.args="--suite=ui"
 mvn test-compile exec:java -Dexec.args="--suite=ui --browser=firefox --headless=false --threads=2"
 mvn test-compile exec:java -Dexec.args="--suite=all --groups=smoke"
 ```
@@ -69,6 +44,17 @@ Flags: `--suite=all|api|ui`, `--groups=a,b`, `--parallel=methods`,
 Add `--dry-run` to only print the generated suite
 (`test-output/dynamic-testng.xml`) without running it. Every flag also works
 as `-Dsuite=api` etc., which is handy in CI.
+
+Other useful options:
+
+```bash
+# run headed, or on firefox, via surefire
+mvn test -Dheadless=false
+mvn test -Dbrowser=firefox
+
+# run a single class
+mvn test -Dtest=PetApiTests
+```
 
 ## Reports
 
@@ -87,15 +73,13 @@ src/test/java/com/automation/
   pages/       page objects, one class per page, locators kept private
   api/         thin wrappers around the Petstore endpoints
   models/      request/response POJOs (Jackson, Lombok builders)
+  runner/      TestRunner + SuiteGenerator — builds the suite at runtime
   utils/       config reader, random test data, JSON, Excel, files
   listeners/   ExtentReports logging + one automatic retry for flakes
   tests/api/   PetApiTests, StoreApiTests, UserApiTests
   tests/ui/    one class per page under test
 src/test/resources/
   config.properties   base URLs, browser, timeouts
-  testng.xml          full regression suite
-  testng-api.xml      API only
-  testng-ui.xml       UI only
 ```
 
 A couple of things worth knowing:
