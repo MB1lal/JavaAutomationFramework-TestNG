@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="API Suite" parallel="methods" thread-count="4">
+    <listeners>
+        <listener class-name="com.automation.listeners.TestListener"/>
+    </listeners>
+    <test name="Petstore API tests">
+        <groups>
+            <run>
+                <include name="api"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="com.automation.tests.api"/>
+        </packages>
+    </test>
+</suite>
