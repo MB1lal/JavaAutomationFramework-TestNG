@@ -58,7 +58,9 @@ mvn test -Dtest=PetApiTests
 
 ## Reports
 
-After a run you'll find:
+Latest report: https://mb1lal.github.io/JavaAutomationFramework-TestNG/
+
+After a local run you'll find:
 
 - `test-output/extent-report.html` — the readable report with screenshots
   attached to failures
