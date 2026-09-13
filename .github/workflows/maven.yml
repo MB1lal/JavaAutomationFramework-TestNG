@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "21"
@@ -22,11 +22,48 @@ jobs:
       - name: Run tests
         run: mvn -B test
 
-      - name: Upload Extent report
+      - name: Prepare Pages content
         if: always()
-        uses: actions/upload-artifact@v4
+        run: |
+          mkdir -p report
+          if [ -f test-output/extent-report.html ]; then
+            cp test-output/extent-report.html report/index.html
+          else
+            echo "<h1>No report generated</h1>" > report/index.html
+          fi
+
+      - name: Upload full test output
+        if: always()
+        uses: actions/upload-artifact@v6
         with:
           name: extent-report
           path: test-output/
           if-no-files-found: warn
           retention-days: 10
+
+      - name: Upload Pages content
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: pages-content
+          path: report/
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Pages content
+        uses: actions/download-artifact@v7
+        with:
+          name: pages-content
+          path: ./report
+
+      - name: Deploy report to Github Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./report
